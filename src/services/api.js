@@ -30,7 +30,7 @@ export const api = {
   // Properties
   async getProperties(filters = {}) {
     const params = {};
-    if (filters.type) params.type = filters.type;
+    if (filters.type) params.type_like = filters.type;
     if (filters.status) params.status = filters.status;
     if (filters.agentId) params.agentId = filters.agentId;
     if (filters.location) params.location_like = filters.location;
@@ -38,6 +38,9 @@ export const api = {
     if (filters.minPrice) params.price_gte = filters.minPrice;
     if (filters.maxPrice) params.price_lte = filters.maxPrice;
     if (filters.bedrooms) params.bedrooms_gte = filters.bedrooms;
+    if (filters.bathrooms) params.bathrooms_gte = filters.bathrooms;
+    if (filters.minArea) params.area_gte = filters.minArea;
+    if (filters.maxArea) params.area_lte = filters.maxArea;
     if (filters.sortBy === 'priceAsc') { params._sort = 'price'; params._order = 'asc'; }
     if (filters.sortBy === 'priceDesc') { params._sort = 'price'; params._order = 'desc'; }
     if (filters.sortBy === 'newest') { params._sort = 'id'; params._order = 'desc'; }
