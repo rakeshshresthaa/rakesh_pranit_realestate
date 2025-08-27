@@ -26,6 +26,7 @@ const Listings = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [propertiesPerPage] = useState(9);
+  const [sortBy, setSortBy] = useState(searchParams.get('sortBy') || '');
 
   // Filter states
   const [filters, setFilters] = useState({
@@ -43,12 +44,12 @@ const Listings = () => {
 
   useEffect(() => {
     fetchProperties();
-  }, [filters, currentPage]);
+  }, [filters, currentPage, sortBy]);
 
   const fetchProperties = async () => {
     setLoading(true);
     try {
-      const response = await api.getProperties(filters);
+      const response = await api.getProperties({ ...filters, sortBy });
       if (response.success) {
         setProperties(response.data);
         setTotalPages(Math.ceil(response.data.length / propertiesPerPage));
@@ -70,6 +71,15 @@ const Listings = () => {
     Object.entries(newFilters).forEach(([k, v]) => {
       if (v) params.append(k, v);
     });
+    if (sortBy) params.append('sortBy', sortBy);
+    setSearchParams(params);
+  };
+
+  const handleSortChange = (value) => {
+    setSortBy(value);
+    const params = new URLSearchParams();
+    Object.entries(filters).forEach(([k, v]) => { if (v) params.append(k, v); });
+    if (value) params.append('sortBy', value);
     setSearchParams(params);
   };
 
@@ -88,7 +98,9 @@ const Listings = () => {
     };
     setFilters(clearedFilters);
     setCurrentPage(1);
-    setSearchParams({});
+    const params = new URLSearchParams();
+    if (sortBy) params.append('sortBy', sortBy);
+    setSearchParams(params);
   };
 
   const getCurrentPageProperties = () => {
@@ -357,6 +369,20 @@ const Listings = () => {
                 >
                   <List className="w-5 h-5" />
                 </button>
+              </div>
+
+              {/* Sorting */}
+              <div className="w-full sm:w-auto">
+                <select
+                  value={sortBy}
+                  onChange={(e) => handleSortChange(e.target.value)}
+                  className="input-field"
+                >
+                  <option value="">Sort by</option>
+                  <option value="newest">Newest</option>
+                  <option value="priceAsc">Price: Low to High</option>
+                  <option value="priceDesc">Price: High to Low</option>
+                </select>
               </div>
             </div>
 

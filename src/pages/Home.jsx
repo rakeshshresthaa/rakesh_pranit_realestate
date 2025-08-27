@@ -5,7 +5,7 @@ import { api } from '../services/api';
 import PropertyCard from '../components/PropertyCard';
 import { 
   Search, 
-  Home, 
+  Home as HomeIcon, 
   Building2, 
   MapPin, 
   Star, 
@@ -52,7 +52,7 @@ const Home = () => {
   const categories = [
     {
       name: 'Buy',
-      icon: Home,
+      icon: HomeIcon,
       description: 'Find your dream home',
       path: '/listings?status=for-sale',
       color: 'from-blue-500 to-blue-600'

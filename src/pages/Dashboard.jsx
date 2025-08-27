@@ -29,6 +29,20 @@ const Dashboard = () => {
   const [favorites, setFavorites] = useState([]);
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingProperty, setEditingProperty] = useState(null);
+  const [formData, setFormData] = useState({
+    title: '',
+    price: '',
+    location: '',
+    type: 'house',
+    bedrooms: 1,
+    bathrooms: 1,
+    amenities: '',
+    image: '',
+    status: 'approved'
+  });
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     fetchDashboardData();
@@ -39,7 +53,7 @@ const Dashboard = () => {
     try {
       // Fetch user's properties (if agent/admin)
       if (isAgent || isAdmin) {
-        const propertiesResponse = await api.getProperties();
+        const propertiesResponse = await api.getProperties(isAdmin ? {} : { agentId: user.id });
         if (propertiesResponse.success) {
           setProperties(propertiesResponse.data);
         }
@@ -73,6 +87,89 @@ const Dashboard = () => {
       } catch (error) {
         toast.error('Failed to delete property');
       }
+    }
+  };
+
+  const openAddForm = () => {
+    setEditingProperty(null);
+    setFormData({ title: '', price: '', location: '', type: 'house', bedrooms: 1, bathrooms: 1, amenities: '', image: '', status: 'approved' });
+    setIsFormOpen(true);
+  };
+
+  const openEditForm = (property) => {
+    setEditingProperty(property);
+    setFormData({
+      title: property.title || '',
+      price: property.price || '',
+      location: property.location || '',
+      type: property.type || 'house',
+      bedrooms: property.bedrooms || 1,
+      bathrooms: property.bathrooms || 1,
+      amenities: (property.amenities || []).join(', '),
+      image: property.image || (property.images && property.images[0]) || '',
+      status: property.status || 'approved',
+    });
+    setIsFormOpen(true);
+  };
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageFile = (file) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setFormData(prev => ({ ...prev, image: reader.result }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const onDropImage = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    handleImageFile(file);
+  };
+
+  const submitForm = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        title: formData.title.trim(),
+        price: Number(formData.price),
+        location: formData.location.trim(),
+        type: formData.type,
+        bedrooms: Number(formData.bedrooms),
+        bathrooms: Number(formData.bathrooms),
+        amenities: formData.amenities
+          .split(',')
+          .map(a => a.trim())
+          .filter(Boolean),
+        image: formData.image.trim(),
+        agentId: user.id,
+        status: formData.status,
+      };
+
+      if (editingProperty) {
+        const res = await api.updateProperty(editingProperty.id, payload);
+        if (res.success) {
+          setProperties(prev => prev.map(p => (p.id === editingProperty.id ? res.data : p)));
+          toast.success('Property updated');
+        }
+      } else {
+        const res = await api.createProperty(payload);
+        if (res.success) {
+          setProperties(prev => [res.data, ...prev]);
+          toast.success('Property added');
+        }
+      }
+      setIsFormOpen(false);
+    } catch (error) {
+      toast.error('Failed to save property');
     }
   };
 
@@ -183,7 +280,7 @@ const Dashboard = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">My Properties</h2>
-        <button className="btn-primary flex items-center">
+        <button onClick={openAddForm} className="btn-primary flex items-center">
           <Plus className="w-4 h-4 mr-2" />
           Add Property
         </button>
@@ -198,14 +295,14 @@ const Dashboard = () => {
           <p className="text-gray-600 dark:text-gray-400 mb-4">
             Start by adding your first property listing
           </p>
-          <button className="btn-primary">Add Your First Property</button>
+          <button onClick={openAddForm} className="btn-primary">Add Your First Property</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {properties.map((property) => (
             <div key={property.id} className="card p-4">
               <img
-                src={property.images[0]}
+                src={(property.images && property.images[0]) || property.image || 'https://via.placeholder.com/400x250'}
                 alt={property.title}
                 className="w-full h-32 object-cover rounded-lg mb-4"
               />
@@ -220,7 +317,7 @@ const Dashboard = () => {
                 <span>{property.views} views</span>
               </div>
               <div className="flex space-x-2">
-                <button className="btn-secondary flex-1 flex items-center justify-center">
+                <button onClick={() => openEditForm(property)} className="btn-secondary flex-1 flex items-center justify-center">
                   <Edit className="w-4 h-4 mr-1" />
                   Edit
                 </button>
@@ -466,6 +563,98 @@ const Dashboard = () => {
             {renderContent()}
           </div>
         </div>
+        {isFormOpen && (
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+            <div className="card w-full max-w-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                {editingProperty ? 'Edit Property' : 'Add Property'}
+              </h3>
+              <form onSubmit={submitForm} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="sm:col-span-2">
+                  <label className="block text-sm mb-1">Title</label>
+                  <input name="title" value={formData.title} onChange={handleFormChange} className="input-field" required />
+                </div>
+                <div>
+                  <label className="block text-sm mb-1">Price</label>
+                  <input type="number" name="price" value={formData.price} onChange={handleFormChange} className="input-field" required />
+                </div>
+                <div>
+                  <label className="block text-sm mb-1">Location</label>
+                  <input name="location" value={formData.location} onChange={handleFormChange} className="input-field" required />
+                </div>
+                <div>
+                  <label className="block text-sm mb-1">Type</label>
+                  <select name="type" value={formData.type} onChange={handleFormChange} className="input-field">
+                    <option value="house">House</option>
+                    <option value="apartment">Apartment</option>
+                    <option value="condo">Condo</option>
+                    <option value="townhouse">Townhouse</option>
+                    <option value="studio">Studio</option>
+                    <option value="commercial">Commercial</option>
+                    <option value="land">Land</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm mb-1">Bedrooms</label>
+                  <input type="number" min="0" name="bedrooms" value={formData.bedrooms} onChange={handleFormChange} className="input-field" />
+                </div>
+                <div>
+                  <label className="block text-sm mb-1">Bathrooms</label>
+                  <input type="number" min="0" name="bathrooms" value={formData.bathrooms} onChange={handleFormChange} className="input-field" />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-sm mb-1">Amenities (comma separated)</label>
+                  <input name="amenities" value={formData.amenities} onChange={handleFormChange} className="input-field" />
+                </div>
+                <div className="sm:col-span-2 space-y-2">
+                  <label className="block text-sm mb-1">Property Image</label>
+                  <div
+                    onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); setIsDragging(true); }}
+                    onDragLeave={(e) => { e.preventDefault(); e.stopPropagation(); setIsDragging(false); }}
+                    onDrop={onDropImage}
+                    className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors ${
+                      isDragging ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20' : 'border-gray-300 dark:border-gray-600'
+                    }`}
+                    onClick={() => document.getElementById('file-input-image')?.click()}
+                  >
+                    {formData.image ? (
+                      <div className="flex items-center space-x-4">
+                        <img src={formData.image} alt="preview" className="w-24 h-24 object-cover rounded" />
+                        <div className="text-left">
+                          <p className="text-sm text-gray-700 dark:text-gray-300">Image selected</p>
+                          <p className="text-xs text-gray-500">Click or drop to replace</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-gray-500">
+                        <p className="text-sm">Drag & drop an image here, or click to select</p>
+                        <p className="text-xs">PNG, JPG up to ~1-2MB</p>
+                      </div>
+                    )}
+                    <input
+                      id="file-input-image"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleImageFile(e.target.files?.[0])}
+                    />
+                  </div>
+                  <input
+                    placeholder="...or paste an image URL"
+                    name="image"
+                    value={formData.image}
+                    onChange={handleFormChange}
+                    className="input-field"
+                  />
+                </div>
+                <div className="sm:col-span-2 flex justify-end space-x-2 mt-2">
+                  <button type="button" onClick={() => setIsFormOpen(false)} className="btn-secondary">Cancel</button>
+                  <button type="submit" className="btn-primary">{editingProperty ? 'Update' : 'Create'}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
