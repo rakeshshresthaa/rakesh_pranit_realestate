@@ -1,0 +1,69 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Pranit Duwal",
+      "email": "pranit@example.com",
+      "role": "user",
+      "password": "123456"
+    },
+    {
+      "id": "2",
+      "name": "Rakesh Shrestha",
+      "email": "rakesh@example.com",
+      "role": "agent",
+      "password": "123456"
+    },
+    {
+      "id": "f32c",
+      "name": "Pranit Duwal",
+      "email": "pranitduwal@gmail.com",
+      "password": "pranit123",
+      "role": "agent",
+      "avatar": "https://ui-avatars.com/api/?name=Pranit%20Duwal"
+    }
+  ],
+  "properties": [
+    {
+      "id": "101",
+      "title": "Modern Apartment in Kathmandu",
+      "price": 50000,
+      "location": "Kathmandu, Nepal",
+      "type": "Apartment",
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "amenities": [
+        "Parking",
+        "Balcony",
+        "WiFi"
+      ],
+      "image": "https://via.placeholder.com/800x500",
+      "agentId": 2,
+      "status": "approved",
+      "description": "A beautiful modern apartment in the heart of Kathmandu.",
+      "views": 0,
+      "inquiries": 0
+    }
+  ],
+  "favorites": [
+    {
+      "id": "1",
+      "userId": 1,
+      "propertyId": 101
+    }
+  ],
+  "notifications": [
+    {
+      "id": "1",
+      "userId": 1,
+      "message": "New property listed in Kathmandu",
+      "read": false
+    },
+    {
+      "id": "2",
+      "userId": 1,
+      "message": "Price drop for Luxury Villa in Pokhara",
+      "read": false
+    }
+  ]
+}

@@ -1,4 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
+
+const BASE_URL = 'http://localhost:5000';
 
 const AuthContext = createContext();
 
@@ -25,18 +28,19 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password, role) => {
     try {
-      // Mock API call - replace with actual authentication
-      const mockUser = {
-        id: Date.now(),
-        email,
-        role,
-        name: email.split('@')[0],
-        avatar: `https://ui-avatars.com/api/?name=${email.split('@')[0]}&background=0ea5e9&color=fff`,
+      const { data: users } = await axios.get(`${BASE_URL}/users`, { params: { email, password, ...(role ? { role } : {}) } });
+      const found = users[0];
+      if (!found) return { success: false, error: 'Invalid credentials' };
+      const authUser = {
+        id: found.id,
+        email: found.email,
+        role: found.role,
+        name: found.name,
+        avatar: found.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(found.name)}`,
       };
-      
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      return { success: true, user: mockUser };
+      setUser(authUser);
+      localStorage.setItem('user', JSON.stringify(authUser));
+      return { success: true, user: authUser };
     } catch (error) {
       return { success: false, error: error.message };
     }
@@ -44,18 +48,12 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password, role) => {
     try {
-      // Mock API call - replace with actual registration
-      const mockUser = {
-        id: Date.now(),
-        email,
-        role,
-        name,
-        avatar: `https://ui-avatars.com/api/?name=${name}&background=0ea5e9&color=fff`,
-      };
-      
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      return { success: true, user: mockUser };
+      const payload = { name, email, password, role, avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}` };
+      const { data: created } = await axios.post(`${BASE_URL}/users`, payload);
+      const authUser = { id: created.id, name: created.name, email: created.email, role: created.role, avatar: created.avatar };
+      setUser(authUser);
+      localStorage.setItem('user', JSON.stringify(authUser));
+      return { success: true, user: authUser };
     } catch (error) {
       return { success: false, error: error.message };
     }

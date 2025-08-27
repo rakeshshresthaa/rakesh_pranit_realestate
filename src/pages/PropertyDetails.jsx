@@ -19,9 +19,9 @@ import {
   Building2,
   Car,
   Wifi,
-  Pool,
+  Waves,
   Shield,
-  TreePine
+  Trees
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -141,10 +141,10 @@ const PropertyDetails = () => {
   const getAmenityIcon = (amenity) => {
     const iconMap = {
       'Parking': Car,
-      'Pool': Pool,
+      'Pool': Waves,
       'Gym': Building2,
       'Security': Shield,
-      'Garden': TreePine,
+      'Garden': Trees,
       'WiFi': Wifi,
       'Balcony': Building2,
       'Fireplace': Building2,
