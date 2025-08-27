@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { api } from '../services/api';
 import { 
   Bell, 
   Check, 
@@ -23,110 +24,20 @@ const Notifications = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate loading notifications
-    setTimeout(() => {
-      setNotifications(generateMockNotifications());
-      setLoading(false);
-    }, 1000);
+    const load = async () => {
+      try {
+        const res = await api.getNotifications(user.id);
+        if (res.success) setNotifications(res.data);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
   }, []);
 
-  const generateMockNotifications = () => {
-    return [
-      {
-        id: 1,
-        type: 'price-drop',
-        title: 'Price Drop Alert',
-        message: 'Property in Downtown has reduced by $25,000',
-        timestamp: '2 hours ago',
-        read: false,
-        priority: 'high',
-        icon: DollarSign,
-        color: 'text-green-600',
-        bgColor: 'bg-green-100 dark:bg-green-900/20'
-      },
-      {
-        id: 2,
-        type: 'new-listing',
-        title: 'New Property Match',
-        message: 'New apartment matching your search criteria in University District',
-        timestamp: '4 hours ago',
-        read: false,
-        priority: 'medium',
-        icon: Building2,
-        color: 'text-blue-600',
-        bgColor: 'bg-blue-100 dark:bg-blue-900/20'
-      },
-      {
-        id: 3,
-        type: 'inquiry',
-        title: 'New Inquiry Received',
-        message: 'Someone inquired about your property listing',
-        timestamp: '1 day ago',
-        read: true,
-        priority: 'medium',
-        icon: MessageCircle,
-        color: 'text-purple-600',
-        bgColor: 'bg-purple-100 dark:bg-purple-900/20'
-      },
-      {
-        id: 4,
-        type: 'favorite',
-        title: 'Property Added to Favorites',
-        message: 'You added "Modern Downtown Apartment" to your favorites',
-        timestamp: '2 days ago',
-        read: true,
-        priority: 'low',
-        icon: Heart,
-        color: 'text-red-600',
-        bgColor: 'bg-red-100 dark:bg-red-900/20'
-      },
-      {
-        id: 5,
-        type: 'market-update',
-        title: 'Market Update',
-        message: 'Property prices in your area increased by 5% this month',
-        timestamp: '3 days ago',
-        read: true,
-        priority: 'low',
-        icon: TrendingUp,
-        color: 'text-orange-600',
-        bgColor: 'bg-orange-100 dark:bg-orange-900/20'
-      },
-      {
-        id: 6,
-        type: 'view-increase',
-        title: 'High View Count',
-        message: 'Your property received 50+ views in the last 24 hours',
-        timestamp: '4 days ago',
-        read: true,
-        priority: 'low',
-        icon: Eye,
-        color: 'text-indigo-600',
-        bgColor: 'bg-indigo-100 dark:bg-indigo-900/20'
-      },
-      {
-        id: 7,
-        type: 'system',
-        title: 'System Maintenance',
-        message: 'Scheduled maintenance on Sunday, 2:00 AM - 4:00 AM',
-        timestamp: '1 week ago',
-        read: true,
-        priority: 'low',
-        icon: Info,
-        color: 'text-gray-600',
-        bgColor: 'bg-gray-100 dark:bg-gray-900/20'
-      }
-    ];
-  };
-
-  const markAsRead = (notificationId) => {
-    setNotifications(prev => 
-      prev.map(notif => 
-        notif.id === notificationId 
-          ? { ...notif, read: true }
-          : notif
-      )
-    );
+  const markAsRead = async (notificationId) => {
+    await api.markNotificationRead(notificationId);
+    setNotifications(prev => prev.map(n => n.id === notificationId ? { ...n, read: true } : n));
   };
 
   const markAllAsRead = () => {

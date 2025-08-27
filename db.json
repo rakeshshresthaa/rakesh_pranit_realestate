@@ -27,9 +27,9 @@
     {
       "id": "101",
       "title": "Modern Apartment in Kathmandu",
-      "price": 50000,
+      "price": 600000,
       "location": "Kathmandu, Nepal",
-      "type": "Apartment",
+      "type": "apartment",
       "bedrooms": 3,
       "bathrooms": 2,
       "amenities": [
@@ -38,7 +38,7 @@
         "WiFi"
       ],
       "image": "https://via.placeholder.com/800x500",
-      "agentId": 2,
+      "agentId": "2",
       "status": "approved",
       "description": "A beautiful modern apartment in the heart of Kathmandu.",
       "views": 0,

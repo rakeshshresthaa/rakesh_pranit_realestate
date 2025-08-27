@@ -42,6 +42,7 @@ const Dashboard = () => {
     image: '',
     status: 'approved'
   });
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     fetchDashboardData();
@@ -114,6 +115,24 @@ const Dashboard = () => {
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageFile = (file) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setFormData(prev => ({ ...prev, image: reader.result }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const onDropImage = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    handleImageFile(file);
   };
 
   const submitForm = async (e) => {
@@ -283,7 +302,7 @@ const Dashboard = () => {
           {properties.map((property) => (
             <div key={property.id} className="card p-4">
               <img
-                src={(property.images && property.images[0]) || property.image}
+                src={(property.images && property.images[0]) || property.image || 'https://via.placeholder.com/400x250'}
                 alt={property.title}
                 className="w-full h-32 object-cover rounded-lg mb-4"
               />
@@ -587,9 +606,46 @@ const Dashboard = () => {
                   <label className="block text-sm mb-1">Amenities (comma separated)</label>
                   <input name="amenities" value={formData.amenities} onChange={handleFormChange} className="input-field" />
                 </div>
-                <div className="sm:col-span-2">
-                  <label className="block text-sm mb-1">Image URL</label>
-                  <input name="image" value={formData.image} onChange={handleFormChange} className="input-field" />
+                <div className="sm:col-span-2 space-y-2">
+                  <label className="block text-sm mb-1">Property Image</label>
+                  <div
+                    onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); setIsDragging(true); }}
+                    onDragLeave={(e) => { e.preventDefault(); e.stopPropagation(); setIsDragging(false); }}
+                    onDrop={onDropImage}
+                    className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors ${
+                      isDragging ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20' : 'border-gray-300 dark:border-gray-600'
+                    }`}
+                    onClick={() => document.getElementById('file-input-image')?.click()}
+                  >
+                    {formData.image ? (
+                      <div className="flex items-center space-x-4">
+                        <img src={formData.image} alt="preview" className="w-24 h-24 object-cover rounded" />
+                        <div className="text-left">
+                          <p className="text-sm text-gray-700 dark:text-gray-300">Image selected</p>
+                          <p className="text-xs text-gray-500">Click or drop to replace</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-gray-500">
+                        <p className="text-sm">Drag & drop an image here, or click to select</p>
+                        <p className="text-xs">PNG, JPG up to ~1-2MB</p>
+                      </div>
+                    )}
+                    <input
+                      id="file-input-image"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleImageFile(e.target.files?.[0])}
+                    />
+                  </div>
+                  <input
+                    placeholder="...or paste an image URL"
+                    name="image"
+                    value={formData.image}
+                    onChange={handleFormChange}
+                    className="input-field"
+                  />
                 </div>
                 <div className="sm:col-span-2 flex justify-end space-x-2 mt-2">
                   <button type="button" onClick={() => setIsFormOpen(false)} className="btn-secondary">Cancel</button>
