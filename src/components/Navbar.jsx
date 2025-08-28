@@ -16,7 +16,7 @@ import {
   X,
   Bell
 } from 'lucide-react';
-import logoUrl from '../assets/logo.svg';
+import logoUrl from '../assets/logo.png';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -53,8 +53,8 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <img src={logoUrl} alt="Smart Real Estate" className="w-8 h-8" />
-            <span className="text-xl font-bold text-gradient">Smart Real Estate</span>
+            <img src={logoUrl} alt="Smart Real Estate" className="w-14 h-12" />
+            <span className="text-xl font-bold text-gradient">         </span>
           </Link>
 
           {/* Desktop Navigation */}
