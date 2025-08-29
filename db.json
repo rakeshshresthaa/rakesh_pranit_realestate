@@ -21,6 +21,22 @@
       "password": "pranit123",
       "role": "agent",
       "avatar": "https://ui-avatars.com/api/?name=Pranit%20Duwal"
+    },
+    {
+      "id": "11be",
+      "name": "Rakesh Shrestha ",
+      "email": "rs6921499@gmail.com",
+      "password": "rakesh123",
+      "role": "agent",
+      "avatar": "https://ui-avatars.com/api/?name=Rakesh%20Shrestha%20"
+    },
+    {
+      "id": "7e95",
+      "name": "Rakesh Shrestha ",
+      "email": "rakesh@site.com",
+      "password": "rakesh123",
+      "role": "admin",
+      "avatar": "https://ui-avatars.com/api/?name=Rakesh%20Shrestha%20"
     }
   ],
   "properties": [
