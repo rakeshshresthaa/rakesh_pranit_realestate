@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { api } from '../services/api';
 import PropertyCard from '../components/PropertyCard';
@@ -21,7 +21,6 @@ const Listings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searching, setSearching] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
   const [showFilters, setShowFilters] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -43,72 +42,12 @@ const Listings = () => {
     maxArea: searchParams.get('maxArea') || '',
   });
 
-  // Update filters when URL params change
-  useEffect(() => {
-    const newFilters = {
-      search: searchParams.get('search') || '',
-      location: searchParams.get('location') || '',
-      type: searchParams.get('type') || '',
-      status: searchParams.get('status') || '',
-      minPrice: searchParams.get('minPrice') || '',
-      maxPrice: searchParams.get('maxPrice') || '',
-      bedrooms: searchParams.get('bedrooms') || '',
-      bathrooms: searchParams.get('bathrooms') || '',
-      minArea: searchParams.get('minArea') || '',
-      maxArea: searchParams.get('maxArea') || '',
-    };
-    setFilters(newFilters);
-  }, [searchParams]);
-
-  // Fetch properties when filters, page, or sort changes
   useEffect(() => {
     fetchProperties();
-  }, [currentPage, sortBy]);
-
-  // Debounced search function
-  const debouncedSearch = useCallback(
-    (() => {
-      let timeoutId;
-      return (searchTerm) => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          if (searchTerm || filters.location || filters.type || filters.status || 
-              filters.minPrice || filters.maxPrice || filters.bedrooms || filters.bathrooms || 
-              filters.minArea || filters.maxArea) {
-            fetchProperties();
-          }
-        }, 500); // 500ms delay
-      };
-    })(),
-    [filters.location, filters.type, filters.status, filters.minPrice, filters.maxPrice, 
-     filters.bedrooms, filters.bathrooms, filters.minArea, filters.maxArea]
-  );
-
-  // Handle search input changes with debouncing
-  useEffect(() => {
-    debouncedSearch(filters.search);
-  }, [filters.search, debouncedSearch]);
-
-  // Handle other filter changes immediately
-  useEffect(() => {
-    if (filters.location || filters.type || filters.status || 
-        filters.minPrice || filters.maxPrice || filters.bedrooms || filters.bathrooms || 
-        filters.minArea || filters.maxArea) {
-      fetchProperties();
-    }
-  }, [filters.location, filters.type, filters.status, 
-      filters.minPrice, filters.maxPrice, filters.bedrooms, filters.bathrooms, 
-      filters.minArea, filters.maxArea]);
+  }, [filters, currentPage, sortBy]);
 
   const fetchProperties = async () => {
-    if (filters.search || filters.location || filters.type || filters.status || 
-        filters.minPrice || filters.maxPrice || filters.bedrooms || filters.bathrooms || 
-        filters.minArea || filters.maxArea) {
-      setSearching(true);
-    } else {
-      setLoading(true);
-    }
-    
+    setLoading(true);
     try {
       const response = await api.getProperties({ ...filters, sortBy });
       if (response.success) {
@@ -125,7 +64,6 @@ const Listings = () => {
       setTotalPages(1);
     } finally {
       setLoading(false);
-      setSearching(false);
     }
   };
 
@@ -137,7 +75,7 @@ const Listings = () => {
     // Update URL params
     const params = new URLSearchParams();
     Object.entries(newFilters).forEach(([k, v]) => {
-      if (v && v.trim() !== '') params.append(k, v.trim());
+      if (v) params.append(k, v);
     });
     if (sortBy) params.append('sortBy', sortBy);
     setSearchParams(params);
@@ -219,14 +157,9 @@ const Listings = () => {
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Property Listings
-            {(filters.search || filters.location || filters.type || filters.status) && (
-              <span className="text-lg text-primary-600 dark:text-primary-400 font-normal ml-2">
-                - Search Results
-              </span>
-            )}
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            {searching ? 'Searching...' : `${properties.length} properties found`}
+            {properties.length} properties found
           </p>
           
           {/* Active Filters Summary */}
@@ -309,59 +242,13 @@ const Listings = () => {
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Search
                 </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Search properties..."
-                    value={filters.search}
-                    onChange={(e) => handleFilterChange('search', e.target.value)}
-                    className="input-field pr-10"
-                  />
-                  {searching && (
-                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-600"></div>
-                    </div>
-                  )}
-                </div>
-                {!filters.search && (
-                  <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                    💡 Try: "mountain view", "lake view", "traditional", "modern", "garden"
-                  </div>
-                )}
-                
-                {/* Quick Search Suggestions */}
-                {!filters.search && (
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    <button
-                      type="button"
-                      onClick={() => handleFilterChange('search', 'mountain view')}
-                      className="px-2 py-1 text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-full transition-colors duration-200"
-                    >
-                      🏔️ Mountain View
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleFilterChange('search', 'lake view')}
-                      className="px-2 py-1 text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-full transition-colors duration-200"
-                    >
-                      🌊 Lake View
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleFilterChange('search', 'traditional')}
-                      className="px-2 py-1 text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-full transition-colors duration-200"
-                    >
-                      🏛️ Traditional
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleFilterChange('search', 'modern')}
-                      className="px-2 py-1 text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-full transition-colors duration-200"
-                    >
-                      🏢 Modern
-                    </button>
-                  </div>
-                )}
+                <input
+                  type="text"
+                  placeholder="Search properties..."
+                  value={filters.search}
+                  onChange={(e) => handleFilterChange('search', e.target.value)}
+                  className="input-field"
+                />
               </div>
 
               {/* Location */}
@@ -571,50 +458,22 @@ const Listings = () => {
               <div className="text-center py-12">
                 <Home className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">
-                  {filters.search || filters.location || filters.type || filters.status ? 
-                    'No properties match your search' : 
-                    'No properties found'
-                  }
+                  No properties found
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-4">
-                  {filters.search && filters.location ? 
-                    `No properties match "${filters.search}" in ${filters.location}` :
-                    filters.search ? 
-                    `No properties match "${filters.search}"` :
-                    filters.location ? 
-                    `No properties found in ${filters.location}` :
+                  {filters.search || filters.location ? 
+                    `No properties match your search for "${filters.search || ''}" ${filters.location ? `in ${filters.location}` : ''}` :
                     'Try adjusting your filters or search criteria'
                   }
                 </p>
-                <div className="space-y-3">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    💡 Try these suggestions:
-                  </p>
-                  <div className="flex flex-wrap justify-center gap-2">
-                    {filters.search && (
-                      <button
-                        onClick={() => handleFilterChange('search', '')}
-                        className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors duration-200"
-                      >
-                        Remove search term
-                      </button>
-                    )}
-                    {filters.location && (
-                      <button
-                        onClick={() => handleFilterChange('location', '')}
-                        className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors duration-200"
-                      >
-                        Try different location
-                      </button>
-                    )}
-                    <button
-                      onClick={clearFilters}
-                      className="px-3 py-1 text-sm bg-primary-100 hover:bg-primary-200 text-primary-700 rounded-full transition-colors duration-200"
-                    >
-                      Clear All Filters
-                    </button>
-                  </div>
-                </div>
+                {(filters.search || filters.location || filters.type || filters.status || filters.minPrice || filters.maxPrice || filters.bedrooms || filters.bathrooms || filters.minArea || filters.maxArea) && (
+                  <button
+                    onClick={clearFilters}
+                    className="btn-primary"
+                  >
+                    Clear All Filters
+                  </button>
+                )}
               </div>
             ) : (
               <>
