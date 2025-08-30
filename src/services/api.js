@@ -44,9 +44,33 @@ export const api = {
     if (filters.sortBy === 'priceAsc') { params._sort = 'price'; params._order = 'asc'; }
     if (filters.sortBy === 'priceDesc') { params._sort = 'price'; params._order = 'desc'; }
     if (filters.sortBy === 'newest') { params._sort = 'id'; params._order = 'desc'; }
+    if (filters.featured) params.featured = filters.featured;
 
-    const { data } = await http.get('/properties', { params });
-    return { success: true, data: data.map(mapProperty) };
+    try {
+      const { data } = await http.get('/properties', { params });
+      
+      // If search query is provided, filter results more intelligently
+      let filteredData = data;
+      if (filters.search) {
+        const searchTerm = filters.search.toLowerCase();
+        filteredData = data.filter(property => 
+          property.title?.toLowerCase().includes(searchTerm) ||
+          property.description?.toLowerCase().includes(searchTerm) ||
+          property.location?.toLowerCase().includes(searchTerm) ||
+          property.address?.toLowerCase().includes(searchTerm) ||
+          property.type?.toLowerCase().includes(searchTerm) ||
+          (property.bedrooms && property.bedrooms.toString().includes(searchTerm)) ||
+          (property.bathrooms && property.bathrooms.toString().includes(searchTerm)) ||
+          (property.amenities && Array.isArray(property.amenities) && 
+           property.amenities.some(amenity => amenity.toLowerCase().includes(searchTerm)))
+        );
+      }
+      
+      return { success: true, data: filteredData.map(mapProperty) };
+    } catch (error) {
+      console.error('Error fetching properties:', error);
+      return { success: false, data: [], error: error.message };
+    }
   },
 
   async getProperty(id) {
