@@ -1,5 +1,5 @@
 {
-  "users": [
+   "users": [
     {
       "id": "1",
       "name": "Pranit Duwal",
@@ -48,34 +48,440 @@
       "type": "apartment",
       "bedrooms": 3,
       "bathrooms": 2,
+      "area": 1500,
+      "yearBuilt": 2019,
       "amenities": [
         "Parking",
         "Balcony",
-        "WiFi"
+        "WiFi",
+        "Modern Kitchen",
+        "Security System"
       ],
-      "image": "https://via.placeholder.com/800x500",
+      "image": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=500&fit=crop",
+      "images": [
+        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=800&h=500&fit=crop"
+      ],
       "agentId": "2",
-      "status": "approved",
-      "description": "A beautiful modern apartment in the heart of Kathmandu.",
-      "views": 0,
-      "inquiries": 0
+      "status": "for-sale",
+      "description": "A beautiful modern apartment in the heart of Kathmandu with contemporary design and premium amenities.",
+      "views": 67,
+      "inquiries": 14,
+      "featured": false
     },
     {
       "id": "e54a",
-      "title": "House",
+      "title": "Traditional Newari House in Bhaktapur",
       "price": 6000000,
-      "location": "Bhaktapur,Nepal",
+      "location": "Bhaktapur, Nepal",
       "type": "house",
       "bedrooms": 5,
       "bathrooms": 5,
+      "area": 4500,
+      "yearBuilt": 2010,
       "amenities": [
         "Parking",
         "Balcony",
-        "WiFi"
+        "WiFi",
+        "Garden",
+        "Security System"
       ],
-      "image": "data:image/webp;base64,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",
-      "agentId": 2,
-      "status": "approved"
+      "image": "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=500&fit=crop",
+      "images": [
+        "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=500&fit=crop"
+      ],
+      "agentId": "2",
+      "status": "approved",
+      "description": "Beautiful traditional Newari architecture house with modern amenities. Located in the historic city of Bhaktapur with easy access to temples and cultural sites.",
+      "views": 45,
+      "inquiries": 8,
+      "featured": true
+    },
+    {
+      "id": "pok1",
+      "title": "Lakeside Villa in Pokhara",
+      "price": 8500000,
+      "location": "Pokhara, Nepal",
+      "type": "house",
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "area": 3800,
+      "yearBuilt": 2018,
+      "amenities": [
+        "Lake View",
+        "Garden",
+        "Parking",
+        "Balcony",
+        "WiFi",
+        "Swimming Pool",
+        "Security System"
+      ],
+      "image": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=500&fit=crop",
+      "images": [
+        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=500&fit=crop"
+      ],
+      "agentId": "2",
+      "status": "approved",
+      "description": "Stunning lakeside villa with panoramic views of Phewa Lake and the Annapurna range. Modern design with luxury finishes and outdoor living spaces.",
+      "views": 89,
+      "inquiries": 15,
+      "featured": true
+    },
+    {
+      "id": "pok2",
+      "title": "Mountain View Cottage in Pokhara",
+      "price": 4500000,
+      "location": "Pokhara, Nepal",
+      "type": "house",
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "area": 2200,
+      "yearBuilt": 2015,
+      "amenities": [
+        "Mountain View",
+        "Garden",
+        "Parking",
+        "Fireplace",
+        "WiFi",
+        "Outdoor Deck"
+      ],
+      "image": "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&h=500&fit=crop",
+      "images": [
+        "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=500&fit=crop"
+      ],
+      "agentId": "2",
+      "status": "approved",
+      "description": "Charming cottage with breathtaking views of the Annapurna mountains. Perfect for nature lovers with easy access to hiking trails and adventure activities.",
+      "views": 67,
+      "inquiries": 12,
+      "featured": false
+    },
+    {
+      "id": "pok3",
+      "title": "Modern Family Home in Pokhara",
+      "price": 7200000,
+      "location": "Pokhara, Nepal",
+      "type": "house",
+      "bedrooms": 5,
+      "bathrooms": 4,
+      "area": 4200,
+      "yearBuilt": 2020,
+      "amenities": [
+        "Modern Kitchen",
+        "Garden",
+        "Parking",
+        "Balcony",
+        "WiFi",
+        "Security System",
+        "Home Theater"
+      ],
+      "image": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop",
+      "images": [
+        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=500&fit=crop"
+      ],
+      "agentId": "2",
+      "status": "approved",
+      "description": "Contemporary family home with open concept design, high-end finishes, and smart home technology. Located in a quiet residential area with easy access to schools and amenities.",
+      "views": 78,
+      "inquiries": 18,
+      "featured": true
+    },
+    {
+      "id": "mus1",
+      "title": "Traditional Mustang Stone House",
+      "price": 3800000,
+      "location": "Mustang, Nepal",
+      "type": "house",
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "area": 1800,
+      "yearBuilt": 2008,
+      "amenities": [
+        "Mountain View",
+        "Traditional Architecture",
+        "Garden",
+        "Parking",
+        "Fireplace",
+        "Solar Power"
+      ],
+      "image": "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&h=500&fit=crop",
+      "images": [
+        "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=500&fit=crop"
+      ],
+      "agentId": "2",
+      "status": "approved",
+      "description": "Authentic Mustang stone house with traditional Tibetan-influenced architecture. Features stunning mountain views and is perfect for those seeking a peaceful retreat in the Himalayas.",
+      "views": 34,
+      "inquiries": 6,
+      "featured": false
+    },
+    {
+      "id": "mus2",
+      "title": "Luxury Mountain Villa in Mustang",
+      "price": 12000000,
+      "location": "Mustang, Nepal",
+      "type": "house",
+      "bedrooms": 6,
+      "bathrooms": 5,
+      "area": 5500,
+      "yearBuilt": 2021,
+      "amenities": [
+        "Panoramic Mountain Views",
+        "Infinity Pool",
+        "Garden",
+        "Helipad",
+        "WiFi",
+        "Security System",
+        "Wine Cellar",
+        "Home Theater"
+      ],
+      "image": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=500&fit=crop",
+      "images": [
+        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=500&fit=crop"
+      ],
+      "agentId": "2",
+      "status": "approved",
+      "description": "Ultra-luxury mountain villa with world-class amenities and breathtaking views of the Mustang valley. Perfect for high-end buyers seeking exclusivity and natural beauty.",
+      "views": 156,
+      "inquiries": 28,
+      "featured": true
+    },
+    {
+      "id": "pok4",
+      "title": "Riverside Family Home in Pokhara",
+      "price": 5800000,
+      "location": "Pokhara, Nepal",
+      "type": "house",
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "area": 3200,
+      "yearBuilt": 2016,
+      "amenities": [
+        "River View",
+        "Garden",
+        "Parking",
+        "Balcony",
+        "WiFi",
+        "Outdoor Kitchen",
+        "Fishing Deck"
+      ],
+      "image": "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=500&fit=crop",
+      "images": [
+        "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop"
+      ],
+      "agentId": "2",
+      "status": "approved",
+      "description": "Beautiful family home located along the Seti River with peaceful surroundings and easy access to Pokhara city center. Features modern design with traditional Nepali elements.",
+      "views": 92,
+      "inquiries": 21,
+      "featured": false
+    },
+    {
+      "id": "mus3",
+      "title": "Eco-Friendly Mustang Retreat",
+      "price": 5200000,
+      "location": "Mustang, Nepal",
+      "type": "house",
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "area": 2800,
+      "yearBuilt": 2019,
+      "amenities": [
+        "Mountain View",
+        "Solar Panels",
+        "Garden",
+        "Parking",
+        "Fireplace",
+        "WiFi",
+        "Rainwater Harvesting",
+        "Organic Garden"
+      ],
+      "image": "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&h=500&fit=crop",
+      "images": [
+        "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=500&fit=crop"
+      ],
+      "agentId": "2",
+      "status": "approved",
+      "description": "Sustainable mountain retreat built with eco-friendly materials and renewable energy systems. Perfect for environmentally conscious buyers who love the mountains.",
+      "views": 45,
+      "inquiries": 9,
+      "featured": false
+    },
+    {
+      "id": "pok5",
+      "title": "Luxury Apartment in Pokhara City Center",
+      "price": 3500000,
+      "location": "Pokhara, Nepal",
+      "type": "apartment",
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "area": 1200,
+      "yearBuilt": 2022,
+      "amenities": [
+        "City View",
+        "Balcony",
+        "Parking",
+        "WiFi",
+        "Gym",
+        "Security System",
+        "Elevator"
+      ],
+      "image": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=500&fit=crop",
+      "images": [
+        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=800&h=500&fit=crop"
+      ],
+      "agentId": "2",
+      "status": "approved",
+      "description": "Modern luxury apartment in the heart of Pokhara with city views and premium amenities. Perfect for young professionals or small families.",
+      "views": 123,
+      "inquiries": 25,
+      "featured": true
+    },
+    {
+      "id": "mus4",
+      "title": "Traditional Mustang Guest House",
+      "price": 2800000,
+      "location": "Mustang, Nepal",
+      "type": "house",
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "area": 2400,
+      "yearBuilt": 2012,
+      "amenities": [
+        "Mountain View",
+        "Traditional Design",
+        "Garden",
+        "Parking",
+        "Fireplace",
+        "WiFi",
+        "Guest Rooms"
+      ],
+      "image": "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&h=500&fit=crop",
+      "images": [
+        "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=500&fit=crop"
+      ],
+      "agentId": "2",
+      "status": "approved",
+      "description": "Charming guest house with traditional Mustang architecture. Ideal for those looking to start a hospitality business or host guests in the mountains.",
+      "views": 56,
+      "inquiries": 11,
+      "featured": false
+    },
+    {
+      "id": "pok6",
+      "title": "Studio Apartment near Phewa Lake",
+      "price": 1800000,
+      "location": "Pokhara, Nepal",
+      "type": "studio",
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "area": 600,
+      "yearBuilt": 2021,
+      "amenities": [
+        "Lake View",
+        "Balcony",
+        "Parking",
+        "WiFi",
+        "Modern Kitchen",
+        "Security System"
+      ],
+      "image": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=500&fit=crop",
+      "images": [
+        "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=800&h=500&fit=crop"
+      ],
+      "agentId": "2",
+      "status": "approved",
+      "description": "Cozy studio apartment with stunning lake views. Perfect for singles, couples, or as an investment property for short-term rentals.",
+      "views": 89,
+      "inquiries": 19,
+      "featured": false
+    },
+    {
+      "id": "pok7",
+      "title": "Furnished Apartment for Rent in Pokhara",
+      "price": 45000,
+      "location": "Pokhara, Nepal",
+      "type": "apartment",
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "area": 1000,
+      "yearBuilt": 2020,
+      "amenities": [
+        "Furnished",
+        "Balcony",
+        "Parking",
+        "WiFi",
+        "Modern Kitchen",
+        "Security System",
+        "Monthly Rent"
+      ],
+      "image": "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=800&h=500&fit=crop",
+      "images": [
+        "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=500&fit=crop"
+      ],
+      "agentId": "2",
+      "status": "for-rent",
+      "description": "Fully furnished modern apartment available for monthly rent. Perfect for expats, students, or anyone looking for temporary accommodation in Pokhara.",
+      "views": 156,
+      "inquiries": 32,
+      "featured": false
+    },
+    {
+      "id": "mus5",
+      "title": "Mountain Cabin for Rent in Mustang",
+      "price": 35000,
+      "location": "Mustang, Nepal",
+      "type": "house",
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "area": 800,
+      "yearBuilt": 2017,
+      "amenities": [
+        "Mountain View",
+        "Furnished",
+        "Garden",
+        "Parking",
+        "Fireplace",
+        "WiFi",
+        "Monthly Rent"
+      ],
+      "image": "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&h=500&fit=crop",
+      "images": [
+        "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=500&fit=crop"
+      ],
+      "agentId": "2",
+      "status": "for-rent",
+      "description": "Charming mountain cabin available for monthly rent. Ideal for writers, artists, or anyone seeking peace and inspiration in the Himalayas.",
+      "views": 78,
+      "inquiries": 15,
+      "featured": false
     }
   ],
   "favorites": [

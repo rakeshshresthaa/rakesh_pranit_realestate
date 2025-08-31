@@ -53,9 +53,15 @@ const Listings = () => {
       if (response.success) {
         setProperties(response.data);
         setTotalPages(Math.ceil(response.data.length / propertiesPerPage));
+      } else {
+        console.error('Error fetching properties:', response.error);
+        setProperties([]);
+        setTotalPages(1);
       }
     } catch (error) {
       console.error('Error fetching properties:', error);
+      setProperties([]);
+      setTotalPages(1);
     } finally {
       setLoading(false);
     }
@@ -155,6 +161,63 @@ const Listings = () => {
           <p className="text-gray-600 dark:text-gray-400">
             {properties.length} properties found
           </p>
+          
+          {/* Active Filters Summary */}
+          {(filters.search || filters.location || filters.type || filters.status || filters.minPrice || filters.maxPrice || filters.bedrooms || filters.bathrooms || filters.minArea || filters.maxArea) && (
+            <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+              <div className="flex items-center justify-between">
+                <div className="flex flex-wrap gap-2">
+                  <span className="text-sm font-medium text-blue-800 dark:text-blue-200">Active filters:</span>
+                  {filters.search && (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                      Search: {filters.search}
+                    </span>
+                  )}
+                  {filters.location && (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                      Location: {filters.location}
+                    </span>
+                  )}
+                  {filters.type && (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                      Type: {filters.type}
+                    </span>
+                  )}
+                  {filters.status && (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                      Status: {filters.status}
+                    </span>
+                  )}
+                  {(filters.minPrice || filters.maxPrice) && (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                      Price: ${filters.minPrice || '0'} - ${filters.maxPrice || '∞'}
+                    </span>
+                  )}
+                  {filters.bedrooms && (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                      Bedrooms: {filters.bedrooms}+
+                    </span>
+                  )}
+                  {filters.bathrooms && (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                      Bathrooms: {filters.bathrooms}+
+                    </span>
+                  )}
+                  {(filters.minArea || filters.maxArea) && (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                      Area: {filters.minArea || '0'} - {filters.maxArea || '∞'} sqft
+                    </span>
+                  )}
+                </div>
+                <button
+                  onClick={clearFilters}
+                  className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 font-medium"
+                >
+                  Clear all
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
@@ -397,9 +460,20 @@ const Listings = () => {
                 <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">
                   No properties found
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Try adjusting your filters or search criteria
+                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  {filters.search || filters.location ? 
+                    `No properties match your search for "${filters.search || ''}" ${filters.location ? `in ${filters.location}` : ''}` :
+                    'Try adjusting your filters or search criteria'
+                  }
                 </p>
+                {(filters.search || filters.location || filters.type || filters.status || filters.minPrice || filters.maxPrice || filters.bedrooms || filters.bathrooms || filters.minArea || filters.maxArea) && (
+                  <button
+                    onClick={clearFilters}
+                    className="btn-primary"
+                  >
+                    Clear All Filters
+                  </button>
+                )}
               </div>
             ) : (
               <>

@@ -20,6 +20,7 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchLocation, setSearchLocation] = useState('');
   const [searchType, setSearchType] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,12 +42,25 @@ const Home = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
+    
+    // Don't search if all fields are empty
+    if (!searchQuery.trim() && !searchLocation.trim() && !searchType) {
+      navigate('/listings');
+      return;
+    }
+    
+    setIsSearching(true);
+    
     const params = new URLSearchParams();
     if (searchQuery.trim()) params.append('search', searchQuery.trim());
     if (searchLocation.trim()) params.append('location', searchLocation.trim());
     if (searchType) params.append('type', searchType);
     
-    navigate(`/listings?${params.toString()}`);
+    // Small delay to show loading state
+    setTimeout(() => {
+      setIsSearching(false);
+      navigate(`/listings?${params.toString()}`);
+    }, 300);
   };
 
   const categories = [
@@ -126,7 +140,129 @@ const Home = () => {
               Discover thousands of properties for sale and rent. Get expert guidance from our professional real estate agents.
             </p>
 
-            
+            {/* Search Form */}
+            <form onSubmit={handleSearch} className="max-w-4xl mx-auto">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-2xl">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  {/* Search Query */}
+                  <div className="md:col-span-2">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <input
+                        type="text"
+                        placeholder="e.g., 3 bedroom house, luxury apartment..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-accent-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Location */}
+                  <div>
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <input
+                        type="text"
+                        placeholder="e.g., Downtown, Brooklyn, NY..."
+                        value={searchLocation}
+                        onChange={(e) => setSearchLocation(e.target.value)}
+                        className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-accent-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Property Type */}
+                  <div>
+                    <select
+                      value={searchType}
+                      onChange={(e) => setSearchType(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-accent-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    >
+                      <option value="">All Types</option>
+                      <option value="house">House</option>
+                      <option value="apartment">Apartment</option>
+                      <option value="condo">Condo</option>
+                      <option value="townhouse">Townhouse</option>
+                      <option value="studio">Studio</option>
+                      <option value="commercial">Commercial</option>
+                      <option value="land">Land</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Search Button */}
+                <div className="mt-4 text-center">
+                  <button
+                    type="submit"
+                    disabled={isSearching}
+                    className={`bg-accent-500 hover:bg-accent-600 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl ${
+                      isSearching ? 'opacity-75 cursor-not-allowed' : ''
+                    }`}
+                  >
+                    {isSearching ? (
+                      <div className="flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                        Searching...
+                      </div>
+                    ) : (
+                      'Search Properties'
+                    )}
+                  </button>
+                </div>
+                
+                {/* Quick Search Tips */}
+                <div className="mt-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                  <p>💡 Try searching for specific features like "pool", "garage", or "balcony"</p>
+                  <p className="mt-1">📍 Or search by location like "Pokhara", "Mustang", "Kathmandu"</p>
+                  <p className="mt-1">🏔️ Popular searches: "mountain view", "lake view", "traditional house"</p>
+                </div>
+                
+                {/* Quick Search Buttons */}
+                <div className="mt-4 flex flex-wrap justify-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchLocation('Pokhara');
+                      setSearchType('house');
+                    }}
+                    className="px-3 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-blue-800 rounded-full transition-colors duration-200"
+                  >
+                    🏠 Houses in Pokhara
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchLocation('Mustang');
+                      setSearchType('house');
+                    }}
+                    className="px-3 py-1 text-xs bg-green-100 hover:bg-green-200 text-green-800 rounded-full transition-colors duration-200"
+                  >
+                    🏔️ Houses in Mustang
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery('mountain view');
+                      setSearchType('');
+                    }}
+                    className="px-3 py-1 text-xs bg-orange-100 hover:bg-orange-200 text-orange-800 rounded-full transition-colors duration-200"
+                  >
+                    🏔️ Mountain View
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery('lake view');
+                      setSearchType('');
+                    }}
+                    className="px-3 py-1 text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 rounded-full transition-colors duration-200"
+                  >
+                    🌊 Lake View
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       </section>
