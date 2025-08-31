@@ -173,17 +173,7 @@ const Login = () => {
             </button>
           </div>
 
-          {/* Demo Accounts Info */}
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-            <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
-              Demo Accounts (for testing):
-            </h4>
-            <div className="text-xs text-blue-700 dark:text-blue-300 space-y-1">
-              <p><strong>User:</strong> user@demo.com / password123</p>
-              <p><strong>Agent:</strong> agent@demo.com / password123</p>
-              <p><strong>Admin:</strong> admin@demo.com / password123</p>
-            </div>
-          </div>
+          
         </form>
 
         {/* Sign Up Link */}
