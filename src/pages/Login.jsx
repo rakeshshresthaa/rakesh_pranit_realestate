@@ -173,7 +173,6 @@ const Login = () => {
             </button>
           </div>
 
-          
         </form>
 
         {/* Sign Up Link */}
